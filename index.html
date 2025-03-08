@@ -10,6 +10,7 @@
             font-size: 24px; 
             overflow: hidden;
             background-color: #f8f8f8;
+            margin: 0;
         }
         .container {
             position: relative;
@@ -63,6 +64,23 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        .floating-text {
+            position: absolute;
+            font-size: 20px;
+            color: #333333; /* Темно-сірий колір */
+            opacity: 0;
+            animation: floatUpText 2s ease-out forwards;
+        }
+        @keyframes floatUpText {
+            from {
+                transform: translateY(0) scale(0.5);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-200px) scale(1);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -70,6 +88,11 @@
         <button class="button" onclick="explodeRose()">Натисни мене ❤️</button>
     </div>
     <script>
+        let phrases = [
+            "Люблю!", "Ціную!", "Здоров'я!", "Бажаю щастя!", "Щоб мрії здійснювались!", 
+            "Нехай твоя усмішка буде завжди!", "Миру в душі!", "Смійся більше!", "Будь щасливим!", "Створено Дімчиком"
+        ];
+
         function explodeRose() {
             let button = document.querySelector(".button");
             button.innerHTML = "🌹";
@@ -79,6 +102,7 @@
                 button.style.display = "none";  
                 createRoses();
                 showMessage();
+                createFloatingText();
             }, 500);
         }
 
@@ -107,6 +131,29 @@
             message.className = "message";
             message.textContent = "Зі святом 8 Березня! 🌸\nБажаю тепла, радості і любові! 💖";
             container.appendChild(message);
+        }
+
+        function createFloatingText() {
+            let container = document.querySelector(".container");
+
+            // Безкінечно створювати побажання
+            setInterval(() => {
+                let textElement = document.createElement("div");
+                textElement.className = "floating-text";
+                textElement.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+
+                // Випадкова позиція
+                textElement.style.top = `${Math.random() * 100}vh`;
+                textElement.style.left = `${Math.random() * 100}vw`;
+                textElement.style.animationDelay = `${Math.random()}s`;
+
+                container.appendChild(textElement);
+
+                // Через 3 секунди видаляти текст після завершення анімації
+                setTimeout(() => {
+                    textElement.remove();
+                }, 3000);  // Час, рівний тривалості анімації (2с)
+            }, 150);  // Кожну секунду створювати нове побажання
         }
     </script>
 </body>
