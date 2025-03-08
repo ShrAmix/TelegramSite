@@ -5,25 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сюрприз</title>
     <style>
-        body { text-align: center; font-size: 24px; }
-        .rose { font-size: 36px; display: none; }
+        body { 
+            text-align: center; 
+            font-size: 24px; 
+            overflow: hidden;
+            background-color: #f8f8f8;
+        }
+        .container {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .button {
+            font-size: 24px;
+            padding: 10px 20px;
+            border: none;
+            background-color: pink;
+            cursor: pointer;
+            transition: transform 0.5s ease-in-out;
+        }
+        .button.clicked {
+            font-size: 48px;
+            transform: scale(5);
+            background: none;
+            border: none;
+            animation: fadeOut 0.5s forwards;
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; }
+        }
+        .rose {
+            position: absolute;
+            font-size: 36px;
+            opacity: 0;
+            animation: floatUp 2s ease-out forwards;
+        }
+        @keyframes floatUp {
+            from {
+                transform: translateY(0) scale(0.5);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-200px) scale(1);
+                opacity: 0;
+            }
+        }
+        .message {
+            font-size: 30px;
+            font-weight: bold;
+            color: #f56b8a;
+            opacity: 0;
+            animation: fadeInMessage 2s 1s forwards;
+        }
+        @keyframes fadeInMessage {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <button onclick="showRoses()">Натисни мене ❤️</button>
-    <div id="roses"></div>
-
+    <div class="container">
+        <button class="button" onclick="explodeRose()">Натисни мене ❤️</button>
+    </div>
     <script>
-        function showRoses() {
-            let rosesDiv = document.getElementById("roses");
-            rosesDiv.innerHTML = "";  
+        function explodeRose() {
+            let button = document.querySelector(".button");
+            button.innerHTML = "🌹";
+            button.classList.add("clicked");
+
+            setTimeout(() => {
+                button.style.display = "none";  
+                createRoses();
+                showMessage();
+            }, 500);
+        }
+
+        function createRoses() {
+            let container = document.querySelector(".container");
+
             for (let i = 0; i < 101; i++) {
                 let rose = document.createElement("span");
                 rose.textContent = "🌹";
                 rose.className = "rose";
-                rose.style.display = "inline-block";
-                rosesDiv.appendChild(rose);
+
+                let x = (Math.random() - 0.5) * window.innerWidth;  
+                let y = (Math.random() - 0.5) * window.innerHeight;
+
+                rose.style.left = `calc(50% + ${x}px)`;
+                rose.style.top = `calc(50% + ${y}px)`;
+                rose.style.animationDelay = `${Math.random()}s`;
+
+                container.appendChild(rose);
             }
+        }
+
+        function showMessage() {
+            let container = document.querySelector(".container");
+            let message = document.createElement("div");
+            message.className = "message";
+            message.textContent = "Зі святом 8 Березня! 🌸\nБажаю тепла, радості і любові! 💖";
+            container.appendChild(message);
         }
     </script>
 </body>
